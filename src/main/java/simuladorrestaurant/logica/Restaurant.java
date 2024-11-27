@@ -15,6 +15,7 @@ import simuladorrestaurant.concurrencia.BufferComida;
 import simuladorrestaurant.ui.RestaurantEntityFactory;
 import com.almasb.fxgl.entity.Entity;
 
+import com.almasb.fxgl.dsl.FXGL;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -53,14 +54,16 @@ public class Restaurant {
 
     // Método para simular la llegada de comensales
     public void llegarComensales() {
-        // Simulación de llegada aleatoria de comensales
         new Thread(() -> {
             while (true) {
                 try {
                     String nombreComensal = "Comensal " + (comensales.size() + 1);  // Asignar un nombre único al comensal
-                    Comensal comensal = new Comensal(monitorMesas, bufferOrdenes, bufferComida, nombreComensal);
+                    Entity comensalEntity = new RestaurantEntityFactory().createComensal(0, 0);
+                    Comensal comensal = new Comensal(monitorMesas, bufferOrdenes, bufferComida, nombreComensal, comensalEntity);
                     comensales.add(comensal);
+                    FXGL.getGameWorld().addEntity(comensalEntity);  // Agregar al mundo del juego
                     comensal.start();  // Inicia el hilo del comensal
+
                     Thread.sleep((long) (Math.random() * 5000)); // Llegada aleatoria de comensales
                 } catch (InterruptedException e) {
                     e.printStackTrace();
@@ -68,7 +71,6 @@ public class Restaurant {
             }
         }).start();
     }
-
 
     // Iniciar la simulación del restaurante (meseros, cocineros)
     public void iniciarSimulacion() {
