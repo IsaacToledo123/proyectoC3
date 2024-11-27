@@ -1,5 +1,6 @@
 package simuladorrestaurant.actores;
 
+import com.almasb.fxgl.entity.Entity;
 import simuladorrestaurant.concurrencia.MonitorMesas;
 import simuladorrestaurant.concurrencia.Buffer;
 import simuladorrestaurant.concurrencia.BufferComida;
@@ -9,13 +10,15 @@ public class Comensal extends Thread {
     private final Buffer bufferOrdenes;
     private final BufferComida bufferComida;
     private final String nombre;
+    private final Entity entidad;  // Agregar referencia a la entidad gráfica
 
     // Modificar el constructor para aceptar Buffer y BufferComida
-    public Comensal(MonitorMesas monitorMesas, Buffer bufferOrdenes, BufferComida bufferComida, String nombre) {
+    public Comensal(MonitorMesas monitorMesas, Buffer bufferOrdenes, BufferComida bufferComida, String nombre, Entity entidad) {
         this.monitorMesas = monitorMesas;
         this.bufferOrdenes = bufferOrdenes;
         this.bufferComida = bufferComida;
         this.nombre = nombre;
+        this.entidad = entidad;  // Inicializar la entidad gráfica
     }
 
     @Override
@@ -39,5 +42,9 @@ public class Comensal extends Thread {
         } catch (InterruptedException e) {
             Thread.currentThread().interrupt();
         }
+    }
+
+    public Entity getEntidad() {
+        return entidad;
     }
 }
