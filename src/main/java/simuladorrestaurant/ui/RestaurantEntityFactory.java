@@ -5,19 +5,19 @@ import com.almasb.fxgl.entity.Entity;
 import com.almasb.fxgl.entity.EntityFactory;
 import com.almasb.fxgl.entity.SpawnData;
 import com.almasb.fxgl.entity.Spawns;
-import javafx.scene.paint.Color;
-import javafx.scene.shape.Rectangle;
+import javafx.scene.image.ImageView;
 
 public class RestaurantEntityFactory implements EntityFactory {
     public enum EntityType {
         MESERO, COCINERO, COMENSAL
     }
 
+    // Para Mesero, se usa una imagen (por ejemplo, "mesero.png")
     @Spawns("mesero")
     public Entity createMesero(SpawnData data) {
         return FXGL.entityBuilder(data)
                 .type(EntityType.MESERO)
-                .viewWithBBox(new Rectangle(30, 30, Color.BLUE))
+                .view(FXGL.getAssetLoader().loadTexture("mesero.png")) // Directamente usar el Texture
                 .collidable()
                 .build();
     }
@@ -28,12 +28,12 @@ public class RestaurantEntityFactory implements EntityFactory {
         return createMesero(data);
     }
 
-    // Hacer lo mismo para Cocinero y Comensal
+    // Para Cocinero, se usa una imagen (por ejemplo, "cocinero.png")
     @Spawns("cocinero")
     public Entity createCocinero(SpawnData data) {
         return FXGL.entityBuilder(data)
                 .type(EntityType.COCINERO)
-                .viewWithBBox(new Rectangle(30, 30, Color.RED))
+                .view(FXGL.getAssetLoader().loadTexture("cocinero.png")) // Directamente usar el Texture
                 .collidable()
                 .build();
     }
@@ -43,11 +43,12 @@ public class RestaurantEntityFactory implements EntityFactory {
         return createCocinero(data);
     }
 
+    // Para Comensal, se usa una imagen (por ejemplo, "comensal.png")
     @Spawns("comensal")
     public Entity createComensal(SpawnData data) {
         return FXGL.entityBuilder(data)
                 .type(EntityType.COMENSAL)
-                .viewWithBBox(new Rectangle(20, 20, Color.GREEN))
+                .view(FXGL.getAssetLoader().loadTexture("comensal.png")) // Directamente usar el Texture
                 .collidable()
                 .build();
     }
