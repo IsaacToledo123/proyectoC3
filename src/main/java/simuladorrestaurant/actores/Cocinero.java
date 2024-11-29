@@ -4,6 +4,8 @@ import com.almasb.fxgl.entity.Entity;
 import simuladorrestaurant.concurrencia.MonitorCocina;
 import simuladorrestaurant.concurrencia.Buffer;
 import simuladorrestaurant.concurrencia.BufferComida;
+import javafx.application.Platform;
+
 
 public class Cocinero extends Thread {
     private final MonitorCocina monitorCocina;
@@ -22,23 +24,35 @@ public class Cocinero extends Thread {
     public void run() {
         try {
             while (true) {
-                // El cocinero espera a que haya una orden disponible en el buffer de órdenes
-                String orden = bufferOrdenes.tomarOrden(); // Tomamos una orden del buffer
-                if (orden != null) {
-                    System.out.println("Cocinero empieza a cocinar la orden de " + orden);
-                    Thread.sleep(2000);  // Simulamos el tiempo de cocción
+                String orden = bufferOrdenes.tomarOrden();
 
+                if (orden != null) {
+                    // Simular estado de cocina
+                    cambiarEstadoEntidad("Cocinando");
+
+                    System.out.println("Cocinero empieza a cocinar la orden de " + orden);
+                    Thread.sleep(2000);  // Tiempo de cocción
+
+                    cambiarEstadoEntidad("Comida lista");
                     System.out.println("Cocinero termina de cocinar la comida de " + orden);
-                    // Coloca la comida lista en el buffer de comida
-                    bufferComida.agregarComida(orden);  // Coloca la comida lista en el buffer
+
+                    bufferComida.agregarComida(orden);
                 }
+
+                Thread.sleep(1000);  // Prevenir uso excesivo de CPU
             }
         } catch (InterruptedException e) {
-            Thread.currentThread().interrupt();  // Si se interrumpe el hilo, lo marcamos como interrumpido
-            System.out.println("Cocinero interrumpido");
-        } catch (Exception e) {
-            System.out.println("Error en la ejecución del cocinero: " + e.getMessage());
-            e.printStackTrace();
+            Thread.currentThread().interrupt();
         }
     }
+
+    // Método para cambiar el estado de la entidad en la UI
+    private void cambiarEstadoEntidad(String estado) {
+        javafx.application.Platform.runLater(() -> {
+            if (entity != null) {
+                entity.setProperty("estado", estado);
+            }
+        });
+    }
+
 }

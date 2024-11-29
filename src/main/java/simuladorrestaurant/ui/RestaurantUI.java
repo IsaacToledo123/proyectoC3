@@ -2,22 +2,22 @@ package simuladorrestaurant.ui;
 
 import com.almasb.fxgl.app.GameApplication;
 import com.almasb.fxgl.app.GameSettings;
-import com.almasb.fxgl.dsl.FXGL;
-import com.almasb.fxgl.entity.Entity;
-import javafx.scene.text.Text;
 import javafx.scene.paint.Color;
+import javafx.scene.text.Text;
 import javafx.util.Duration;
 
-public class RestaurantUI extends GameApplication {
+import simuladorrestaurant.logica.Restaurant;
 
+import static com.almasb.fxgl.dsl.FXGLForKtKt.*;
+
+public class RestaurantUI extends GameApplication {
+    private Restaurant restaurant;
+    private Text textoEstado;
     private int comensalesEnEspera = 0;
     private int mesasDisponibles = 10;
 
-    // Instancia de la fábrica de entidades
-    private RestaurantEntityFactory entityFactory = new RestaurantEntityFactory();
-
-    public static void start(String[] args) {
-        launch(args);
+    public static void main(String[] args) {
+        launch(args);  // Llamada correcta al método launch
     }
 
     @Override
@@ -30,78 +30,40 @@ public class RestaurantUI extends GameApplication {
 
     @Override
     protected void initGame() {
-        // Registrar la fábrica de entidades para el juego
-        FXGL.getGameWorld().addEntityFactory(entityFactory);
+        // Registrar la fábrica de entidades
+        getGameWorld().addEntityFactory(new RestaurantEntityFactory());
 
-        // Automatizar el spawn de comensales cada 5 segundos
-        FXGL.getGameTimer().runAtInterval(() -> {
-            System.out.println("Generando un nuevo comensal automáticamente");
-            spawnComensal();
-        }, Duration.seconds(5));
+        // Crear la instancia de Restaurant
+        restaurant = new Restaurant(
+                5,  // Número de meseros
+                3,  // Número de cocineros
+                10  // Número de mesas
+        );
 
-        // Crear mesero y cocinero iniciales
-        Entity mesero = FXGL.spawn("mesero", 100, 100);
-        Entity cocinero = FXGL.spawn("cocinero", 200, 100);
+        // Iniciar la simulación
+        restaurant.iniciarSimulacion();
+        restaurant.llegarComensales();
     }
 
     @Override
     protected void initUI() {
-        // Mostrar información sobre el estado del restaurante
-        Text textoEstado = new Text("Comensales en espera: " + comensalesEnEspera);
+        // Crear texto de estado
+        textoEstado = new Text("Comensales en espera: 0");
         textoEstado.setFill(Color.WHITE);
         textoEstado.setX(10);
         textoEstado.setY(20);
-        FXGL.getGameScene().addUINode(textoEstado);
+        getGameScene().addUINode(textoEstado);
 
-        FXGL.getGameTimer().runAtInterval(() -> {
-            textoEstado.setText("Comensales en espera: " + comensalesEnEspera);
+        // Actualizar texto de estado periódicamente
+        getGameTimer().runAtInterval(() -> {
+            comensalesEnEspera = restaurant.getComensalesEnEspera();
+            mesasDisponibles = restaurant.getMesasDisponibles();
+
+            textoEstado.setText(String.format(
+                    "Comensales en espera: %d | Mesas disponibles: %d",
+                    comensalesEnEspera,
+                    mesasDisponibles
+            ));
         }, Duration.seconds(0.5));
-    }
-
-    private void spawnComensal() {
-        comensalesEnEspera++;
-
-        // Crear el comensal usando spawn
-        Entity comensal = FXGL.spawn("comensal", 300, 150 + (comensalesEnEspera * 30));
-
-        // Asignar estado y verificar disponibilidad de mesas
-        if (mesasDisponibles > 0) {
-            mesasDisponibles--;
-            comensal.setProperty("estado", "sentado");
-            System.out.println("Comensal sentado, mesas disponibles: " + mesasDisponibles);
-        } else {
-            comensal.setProperty("estado", "esperando");
-            System.out.println("Comensal esperando, mesas disponibles: " + mesasDisponibles);
-        }
-
-        // Simular atención del comensal
-        FXGL.getGameTimer().runOnceAfter(() -> {
-            if ("sentado".equals(comensal.getString("estado"))) {
-                atenderComensal(comensal);
-            }
-        }, Duration.seconds(2));
-    }
-
-    private void atenderComensal(Entity comensal) {
-        comensal.setProperty("estado", "siendo atendido");
-        System.out.println("Mesero atendiendo al comensal");
-
-        FXGL.getGameTimer().runOnceAfter(() -> {
-            comensal.setProperty("estado", "comiendo");
-            System.out.println("Comensal comenzando a comer");
-
-            terminarComida(comensal);
-        }, Duration.seconds(3));
-    }
-
-    private void terminarComida(Entity comensal) {
-        comensalesEnEspera--;
-        mesasDisponibles++;
-        System.out.println("Comensal terminó, mesa liberada");
-        comensal.removeFromWorld();
-    }
-
-    public static void main(String[] args) {
-        launch(args);
     }
 }

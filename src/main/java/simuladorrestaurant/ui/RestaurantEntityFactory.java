@@ -5,56 +5,57 @@ import com.almasb.fxgl.entity.Entity;
 import com.almasb.fxgl.entity.EntityFactory;
 import com.almasb.fxgl.entity.SpawnData;
 import com.almasb.fxgl.entity.Spawns;
-import javafx.scene.image.ImageView;
+import javafx.scene.paint.Color;
+import javafx.scene.shape.Rectangle;
 
 public class RestaurantEntityFactory implements EntityFactory {
+    // Enum para tipos de entidades
     public enum EntityType {
         MESERO, COCINERO, COMENSAL
     }
 
-    // Para Mesero, se usa una imagen (por ejemplo, "mesero.png")
     @Spawns("mesero")
     public Entity createMesero(SpawnData data) {
         return FXGL.entityBuilder(data)
                 .type(EntityType.MESERO)
-                .view(FXGL.getAssetLoader().loadTexture("mesero.png")) // Directamente usar el Texture
+                .view(new Rectangle(40, 40, Color.BLUE))
                 .collidable()
+                .with("estado", "libre")
                 .build();
     }
 
-    // Sobrecarga del método para coordenadas x, y
+    // Sobrecarga para crear con coordenadas específicas
     public Entity createMesero(int x, int y) {
-        SpawnData data = new SpawnData(x, y);
-        return createMesero(data);
+        return createMesero(new SpawnData(x, y));
     }
 
-    // Para Cocinero, se usa una imagen (por ejemplo, "cocinero.png")
     @Spawns("cocinero")
     public Entity createCocinero(SpawnData data) {
         return FXGL.entityBuilder(data)
                 .type(EntityType.COCINERO)
-                .view(FXGL.getAssetLoader().loadTexture("cocinero.png")) // Directamente usar el Texture
+                .view(new Rectangle(40, 40, Color.RED))
                 .collidable()
+                .with("estado", "libre")
                 .build();
     }
 
+    // Sobrecarga para crear con coordenadas específicas
     public Entity createCocinero(int x, int y) {
-        SpawnData data = new SpawnData(x, y);
-        return createCocinero(data);
+        return createCocinero(new SpawnData(x, y));
     }
 
-    // Para Comensal, se usa una imagen (por ejemplo, "comensal.png")
     @Spawns("comensal")
     public Entity createComensal(SpawnData data) {
         return FXGL.entityBuilder(data)
                 .type(EntityType.COMENSAL)
-                .view(FXGL.getAssetLoader().loadTexture("comensal.png")) // Directamente usar el Texture
+                .view(new Rectangle(30, 30, Color.GREEN))
                 .collidable()
+                .with("estado", "esperando")
                 .build();
     }
 
+    // Sobrecarga para crear con coordenadas específicas
     public Entity createComensal(int x, int y) {
-        SpawnData data = new SpawnData(x, y);
-        return createComensal(data);
+        return createComensal(new SpawnData(x, y));
     }
 }
