@@ -35,9 +35,8 @@ public class Mesero extends Thread {
 
                     System.out.println("Mesero entrega la comida a " + comida);
 
-                    synchronized (monitorCocina) {
-                        monitorCocina.notify();
-                    }
+                    // Opcional: Añadir una pequeña pausa para simular entrega
+                    Thread.sleep(500);
                 }
 
                 Thread.sleep(1000); // Prevenir uso excesivo de CPU
@@ -46,7 +45,6 @@ public class Mesero extends Thread {
             Thread.currentThread().interrupt();
         }
     }
-
     // Método para mover la entidad en la UI
     private void moverEntidad(double x, double y) {
         Platform.runLater(() -> {

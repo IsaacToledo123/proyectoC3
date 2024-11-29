@@ -32,24 +32,35 @@ public class Comensal extends Thread {
             String mesa = monitorMesas.asignarMesa(nombre);
 
             actualizarEstado("Sentado en " + mesa);
+            System.out.println(nombre + " se sienta en " + mesa + " y espera al mesero para hacer su pedido.");
 
-            synchronized (bufferOrdenes) {
-                System.out.println(nombre + " se sienta en " + mesa + " y espera al mesero para hacer su pedido.");
-                bufferOrdenes.agregarOrden(nombre);
-                System.out.println(nombre + " hace su pedido.");
-                bufferOrdenes.wait();
+            // Hacer pedido
+            bufferOrdenes.agregarOrden(nombre);
+            System.out.println(nombre + " hace su pedido.");
+
+            // Esperar a recibir la comida
+            String comida = null;
+            while (comida == null) {
+                comida = bufferComida.tomarComida();
+                if (comida == null) {
+                    Thread.sleep(100);
+                }
             }
 
-            actualizarEstado("Comiendo");
             System.out.println(nombre + " recibe su comida y empieza a comer.");
+            actualizarEstado("Comiendo");
 
             // Simular tiempo de comida
             Thread.sleep(3000);
 
+            // Liberar mesa
             actualizarEstado("Terminando");
             monitorMesas.liberarMesa(mesa);
+            System.out.println(nombre + " termina de comer y libera " + mesa);
 
+            // Salir del restaurante
             actualizarEstado("Saliendo");
+
         } catch (InterruptedException e) {
             Thread.currentThread().interrupt();
         } finally {
@@ -61,7 +72,6 @@ public class Comensal extends Thread {
             });
         }
     }
-
     // Método para actualizar estado en la UI
     private void actualizarEstado(String estado) {
         this.estadoActual = estado;

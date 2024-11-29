@@ -45,7 +45,6 @@ public class Cocinero extends Thread {
             Thread.currentThread().interrupt();
         }
     }
-
     // Método para cambiar el estado de la entidad en la UI
     private void cambiarEstadoEntidad(String estado) {
         javafx.application.Platform.runLater(() -> {
