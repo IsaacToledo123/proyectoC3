@@ -2,6 +2,7 @@ module simuladorrestaurant {
     requires javafx.controls;
     requires javafx.fxml;
     requires com.almasb.fxgl.all;
+    requires annotations;
 
     // Permitir que JavaFX acceda al paquete simuladorrestaurant
     opens simuladorrestaurant to javafx.fxml;

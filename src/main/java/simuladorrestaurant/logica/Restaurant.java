@@ -15,9 +15,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
+@SuppressWarnings("BusyWait")
 public class Restaurant {
     private final MonitorMesas monitorMesas;
-    private final MonitorCocina monitorCocina;
     private final Buffer bufferOrdenes;
     private final BufferComida bufferComida;
 
@@ -29,7 +29,7 @@ public class Restaurant {
 
     public Restaurant(int numMeseros, int numCocineros, int numMesas) {
         this.monitorMesas = new MonitorMesas(numMesas);
-        this.monitorCocina = new MonitorCocina();
+        MonitorCocina monitorCocina = new MonitorCocina();
         this.bufferOrdenes = new Buffer(10);
         this.bufferComida = new BufferComida(5);
 
@@ -53,7 +53,7 @@ public class Restaurant {
             this.meseros.add(mesero);
 
             // Agregar entidad al mundo de juego
-            Platform.runLater(() -> FXGL.getGameWorld().addEntity(meseroEntity));
+            FXGL.getGameWorld().addEntity(meseroEntity);
         }
 
         // Crear cocineros
@@ -71,12 +71,11 @@ public class Restaurant {
             this.cocineros.add(cocinero);
 
             // Agregar entidad al mundo de juego
-            Platform.runLater(() -> FXGL.getGameWorld().addEntity(cocineroEntity));
+            FXGL.getGameWorld().addEntity(cocineroEntity);
         }
     }
 
     public void iniciarSimulacion() {
-        // Iniciar hilos de meseros y cocineros
         meseros.forEach(Thread::start);
         cocineros.forEach(Thread::start);
     }
@@ -85,32 +84,27 @@ public class Restaurant {
         new Thread(() -> {
             while (true) {
                 try {
-                    // Nombre único para cada comensal
                     String nombreComensal = "Comensal " + (comensales.size() + 1);
-
-                    // Crear entidad de comensal con posición inicial
                     Entity comensalEntity = new RestaurantEntityFactory().createComensal(
-                            300 + random.nextInt(200), // Posición x aleatoria
-                            150 + (comensales.size() * 50) // Posición y incremental
+                            300 + random.nextInt(200),
+                            150 + (comensales.size() * 50)
                     );
 
-                    // Agregar al mundo de juego
                     Platform.runLater(() -> FXGL.getGameWorld().addEntity(comensalEntity));
 
-                    // Crear instancia de Comensal
                     Comensal comensal = new Comensal(
-                            monitorMesas,
-                            bufferOrdenes,
-                            bufferComida,
-                            nombreComensal,
-                            comensalEntity
+                            monitorMesas, bufferOrdenes, bufferComida, nombreComensal, comensalEntity
                     );
 
-                    // Añadir a la lista y comenzar
                     comensales.add(comensal);
                     comensal.start();
 
-                    // Tiempo aleatorio entre llegada de comensales
+                    // Cambiar el estado de las mesas (cuando un comensal llega)
+                    monitorMesas.asignarMesa(comensal);
+
+                    // Notificar a los observadores que hay un cambio en las mesas disponibles
+                    monitorMesas.notificar();
+
                     Thread.sleep(random.nextInt(5000) + 1000);
                 } catch (InterruptedException e) {
                     Thread.currentThread().interrupt();
@@ -120,15 +114,17 @@ public class Restaurant {
         }).start();
     }
 
-    // Método para obtener la cantidad de comensales en espera
     public int getComensalesEnEspera() {
         return (int) comensales.stream()
                 .filter(c -> c.getEstadoActual().equals("Buscando mesa"))
                 .count();
     }
 
-    // Método para obtener la cantidad de mesas disponibles
     public int getMesasDisponibles() {
-        return monitorMesas.getMesasDisponibles();
+        return monitorMesas.getMesasDisponibles(); // Se asegura de que refleje correctamente las mesas disponibles
+    }
+
+    public List<Comensal> getComensales() {
+        return comensales;
     }
 }
