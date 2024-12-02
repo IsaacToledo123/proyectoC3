@@ -4,21 +4,34 @@ import com.almasb.fxgl.entity.Entity;
 import com.almasb.fxgl.entity.EntityFactory;
 import com.almasb.fxgl.entity.SpawnData;
 import simuladorrestaurant.config.MesaConfig;
+import simuladorrestaurant.concurrencia.MonitorMesas;
 import javafx.scene.shape.Rectangle;
 import com.almasb.fxgl.dsl.FXGL;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.geometry.Rectangle2D;
-import com.almasb.fxgl.entity.Spawns;
 import javafx.scene.paint.Color;
 
 public class RestaurantEntityFactory implements EntityFactory {
 
-    public static Entity createMesa(SpawnData data) {
+    private static final String SPRITE_SHEET_PATH = "file:resources/simuladorrestaurant/assets/character.png";
+    private MonitorMesas monitorMesas;
+
+    // Constructor para inicializar monitorMesas
+    public RestaurantEntityFactory(MonitorMesas monitorMesas) {
+        this.monitorMesas = monitorMesas;
+    }
+
+    public Entity createMesa(SpawnData data) {
         double cellWidth = (double) FXGL.getSettings().getWidth() / 50;
         double cellHeight = (double) FXGL.getSettings().getHeight() / 50;
 
         Rectangle mesaVisual = new Rectangle(cellWidth, cellHeight, Color.GREEN.deriveColor(0, 1, 1, 0.5));
+
+        // Verifica si la mesa está ocupada y cambia el color
+        if (monitorMesas != null && !monitorMesas.isMesaOcupada(data.get("row"), data.get("col"))) {
+            mesaVisual.setFill(Color.RED); // Si está ocupada, se pinta de rojo
+        }
 
         double x = MesaConfig.calcularX(data.get("col"), cellWidth);
         double y = MesaConfig.calcularY(data.get("row"), cellHeight);
@@ -30,44 +43,36 @@ public class RestaurantEntityFactory implements EntityFactory {
                 .build();
     }
 
-    private static final String SPRITE_SHEET_PATH = "file:resources/simuladorrestaurant/assets/character.png";
-
-    @Spawns("mesero1")  // Cambiado para ser único
     public Entity createMesero(SpawnData data) {
+        System.out.println("Creando Mesero...");
         return FXGL.entityBuilder(data)
                 .view(createSprite(2, 2))  // Cuadrante 2 de la sección 2 (mesero)
                 .collidable()
+                .with("tipo", "mesero")  // Tipo diferenciado
                 .with("estado", "libre")
+                .with("id", java.util.UUID.randomUUID().toString()) // Propiedad única
                 .build();
     }
 
-    public Entity createMesero(int x, int y) {
-        return createMesero(new SpawnData(x, y));
-    }
-
-    @Spawns("cocinero1")  // Cambiado para ser único
     public Entity createCocinero(SpawnData data) {
+        System.out.println("Creando Cocinero...");
         return FXGL.entityBuilder(data)
                 .view(createSprite(3, 2))  // Cuadrante 2 de la sección 3 (cocinero)
                 .collidable()
-                .with("estado", "libre")
+                .with("tipo", "cocinero")  // Tipo diferenciado
+                .with("estado", "ocupado")
+                .with("id", java.util.UUID.randomUUID().toString()) // Propiedad única
                 .build();
-    }
-
-    public Entity createCocinero(int x, int y) {
-        return createCocinero(new SpawnData(x, y));
     }
 
     public Entity createComensal(SpawnData data) {
+        System.out.println("Creando Comensal...");
         return FXGL.entityBuilder(data)
                 .view(createSprite(1, 2))  // Cuadrante 2 de la sección 1 (comensal)
                 .collidable()
+                .with("tipo", "comensal")  // Tipo diferenciado
                 .with("estado", "esperando")
                 .build();
-    }
-
-    public Entity createComensal(int x, int y) {
-        return createComensal(new SpawnData(x, y));
     }
 
     private ImageView createSprite(int section, int quadrant) {

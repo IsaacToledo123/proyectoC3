@@ -4,6 +4,7 @@ public class MesaConfig {
 
     // Lógica para verificar si una celda es una mesa
     public static boolean isMesa(int row, int col) {
+        System.out.println("Verificando mesa en: (" + row + ", " + col + ")");
         return (row >= 14 && row <= 15) && (col == 8) ||
                 (row >= 14 && row <= 15) && (col >= 11 && col <= 12) ||
                 (row >= 14 && row <= 15) && (col >= 18 && col <= 19) ||

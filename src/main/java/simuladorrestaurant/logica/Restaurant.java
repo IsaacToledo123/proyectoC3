@@ -1,5 +1,6 @@
 package simuladorrestaurant.logica;
 
+import com.almasb.fxgl.entity.SpawnData;
 import simuladorrestaurant.actores.Mesero;
 import simuladorrestaurant.actores.Cocinero;
 import simuladorrestaurant.actores.Comensal;
@@ -25,10 +26,13 @@ public class Restaurant {
     private final List<Mesero> meseros;
     private final List<Cocinero> cocineros;
 
+    private RestaurantEntityFactory factory;
+
     private final Random random = new Random();
 
-    public Restaurant(int numMeseros, int numCocineros, int numMesas) {
-        this.monitorMesas = new MonitorMesas(numMesas);
+    public Restaurant(int numMeseros, int numCocineros, MonitorMesas monitorMesas) {
+        this.factory = new RestaurantEntityFactory(monitorMesas);
+        this.monitorMesas = monitorMesas;  // Asignar el monitorMesas pasado
         MonitorCocina monitorCocina = new MonitorCocina();
         this.bufferOrdenes = new Buffer(10);
         this.bufferComida = new BufferComida(5);
@@ -37,12 +41,9 @@ public class Restaurant {
         this.meseros = new ArrayList<>();
         this.cocineros = new ArrayList<>();
 
-        // Crear meseros
         for (int i = 0; i < numMeseros; i++) {
-            Entity meseroEntity = new RestaurantEntityFactory().createMesero(
-                    100 + (i * 50), // Posición x variada
-                    100  // Posición y fija
-            );
+            SpawnData spawnData = new SpawnData(100 + (i * 50), 100); // Usar SpawnData
+            Entity meseroEntity = new RestaurantEntityFactory(monitorMesas).createMesero(spawnData); // Pasar SpawnData
             Mesero mesero = new Mesero(
                     bufferOrdenes,
                     bufferComida,
@@ -51,17 +52,12 @@ public class Restaurant {
                     meseroEntity
             );
             this.meseros.add(mesero);
-
-            // Agregar entidad al mundo de juego
             FXGL.getGameWorld().addEntity(meseroEntity);
         }
 
-        // Crear cocineros
         for (int i = 0; i < numCocineros; i++) {
-            Entity cocineroEntity = new RestaurantEntityFactory().createCocinero(
-                    200 + (i * 50), // Posición x variada
-                    100  // Posición y fija
-            );
+            SpawnData spawnData = new SpawnData(200 + (i * 50), 100);
+            Entity cocineroEntity = new RestaurantEntityFactory(monitorMesas).createCocinero(spawnData);
             Cocinero cocinero = new Cocinero(
                     bufferOrdenes,
                     bufferComida,
@@ -69,8 +65,6 @@ public class Restaurant {
                     cocineroEntity
             );
             this.cocineros.add(cocinero);
-
-            // Agregar entidad al mundo de juego
             FXGL.getGameWorld().addEntity(cocineroEntity);
         }
     }
@@ -85,26 +79,19 @@ public class Restaurant {
             while (true) {
                 try {
                     String nombreComensal = "Comensal " + (comensales.size() + 1);
-                    Entity comensalEntity = new RestaurantEntityFactory().createComensal(
+                    SpawnData spawnData = new SpawnData(
                             300 + random.nextInt(200),
                             150 + (comensales.size() * 50)
                     );
-
+                    Entity comensalEntity = new RestaurantEntityFactory(monitorMesas).createComensal(spawnData);
                     Platform.runLater(() -> FXGL.getGameWorld().addEntity(comensalEntity));
-
                     Comensal comensal = new Comensal(
                             monitorMesas, bufferOrdenes, bufferComida, nombreComensal, comensalEntity
                     );
-
                     comensales.add(comensal);
                     comensal.start();
-
-                    // Cambiar el estado de las mesas (cuando un comensal llega)
                     monitorMesas.asignarMesa(comensal);
-
-                    // Notificar a los observadores que hay un cambio en las mesas disponibles
                     monitorMesas.notificar();
-
                     Thread.sleep(random.nextInt(5000) + 1000);
                 } catch (InterruptedException e) {
                     Thread.currentThread().interrupt();
