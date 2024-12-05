@@ -29,7 +29,7 @@ public class CustomerController {
                 })
                 .duration(javafx.util.Duration.seconds(1))
                 .translate(dinerEntity)
-                .to(new javafx.geometry.Point2D(tableX, tableY))
+                .to(new Point2D(tableX, tableY))
                 .buildAndPlay();
     }
 
@@ -57,17 +57,17 @@ public class CustomerController {
                                 FXGL.animationBuilder()
                                         .duration(javafx.util.Duration.seconds(1))
                                         .translate(dinerEntity)
-                                        .to(new javafx.geometry.Point2D(700, -50))
+                                        .to(new Point2D(700, -50))
                                         .buildAndPlay();
                             })
                             .duration(javafx.util.Duration.seconds(1))
                             .translate(dinerEntity)
-                            .to(new javafx.geometry.Point2D(700, 300))
+                            .to(new Point2D(700, 300))
                             .buildAndPlay();
                 })
                 .duration(javafx.util.Duration.seconds(1))
                 .translate(dinerEntity)
-                .to(new javafx.geometry.Point2D(550, 300))
+                .to(new Point2D(550, 300))
                 .buildAndPlay();
     }
 }

@@ -27,7 +27,7 @@ public class MeseroController {
 
     public void moveToKitchen(int tableX, int tableY) {
         FXGL.animationBuilder()
-                .duration(javafx.util.Duration.seconds(1))
+                .duration(Duration.seconds(1))
                 .translate(waiterEntity)
                 .to(new Point2D(tableX, tableY))
                 .buildAndPlay();
@@ -35,7 +35,7 @@ public class MeseroController {
 
     public void moveToTable(Point2D msa) {
         FXGL.animationBuilder()
-                .duration(javafx.util.Duration.seconds(1))
+                .duration(Duration.seconds(1))
                 .translate(waiterEntity)
                 .to(new Point2D(msa.getX(), msa.getY()))
                 .buildAndPlay();
