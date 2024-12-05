@@ -3,7 +3,6 @@ package com.restaurant.simulator.monitores;
 import javafx.geometry.Point2D;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Random;
 
 public class RecepcionistMonitor {
     private final int capacity;
@@ -17,7 +16,7 @@ public class RecepcionistMonitor {
         }
     }
 
-    public synchronized Point2D assignTable() throws InterruptedException {
+    public synchronized Point2D asignarMesa() throws InterruptedException {
         while (tableStatus.values().stream().noneMatch(status -> !status)) {
             wait();
         }
@@ -31,13 +30,13 @@ public class RecepcionistMonitor {
         return null;
     }
 
-    public synchronized void releaseTable(Point2D tablePosition) {
+    public synchronized void mesaLibre(Point2D tablePosition) {
         tableStatus.put(tablePosition, false); // Liberar la mesa
         System.out.println("La mesa ubicada en:"+tablePosition+" ha sido liberada");
         notifyAll(); // Notificar a los hilos en espera
     }
 
-    public synchronized boolean isTableAvailable(Point2D tablePosition) {
+    public synchronized boolean disponibilidad(Point2D tablePosition) {
         return tableStatus.getOrDefault(tablePosition, false);
     }
 }

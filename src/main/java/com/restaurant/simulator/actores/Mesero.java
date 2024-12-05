@@ -29,13 +29,13 @@ public class Mesero extends Thread {
     public void run() {
         try {
             while (true) {
-                String order = monitorMesero.takeOrder();
+                String order = monitorMesero.tomarOrden();
                 System.out.println(this.getName() + " tomó la orden: " + order);
 
-                meseroController.moveToKitchen(400, 200);
-                monitorMesero.addOrderChef(order);
+                meseroController.moverCocina(400, 200);
+                monitorMesero.agregarOrden(order);
 
-                String readyOrder = monitorMesero.takeReadyOrder();
+                String readyOrder = monitorMesero.tomarBuffer();
                 System.out.println(this.getName() + " entregó: " + readyOrder);
 
                 System.out.println("La mesa del cliente es:");
@@ -44,7 +44,7 @@ public class Mesero extends Thread {
                 int mesaRandom = random.nextInt(7);
                 Point2D point = tablePositions[mesaRandom];
                 meseroController.moveToTable(point);
-                monitorMesero.deliverFood(dinerName);
+                monitorMesero.entregarComida(dinerName);
                 meseroController.deliverOrder(readyOrder);
 
                 Thread.sleep((int) (Math.random() * 2000));

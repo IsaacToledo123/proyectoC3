@@ -15,10 +15,10 @@ public class CocineroController {
 
     public CocineroController(String name) {
         this.name = name;
-        Texture textureChef = SpriteLoader.getSprite("mapache.png",1,1,32,32);
+        Texture textureChef = SpriteLoader.getSprite("character.png",5,5,16,16);
         entityChef = FXGL.entityBuilder()
-                .at(150, 100)
-                .scale(1.5, 1.5)
+                .at(100, 170)
+                .scale(2.5, 2.5)
                 .view(textureChef)
                 .buildAndAttach();
 
@@ -38,7 +38,7 @@ public class CocineroController {
         FXGL.animationBuilder()
                 .duration(javafx.util.Duration.seconds(1))
                 .translate(entityChef)
-                .to(new Point2D(150,100))
+                .to(new Point2D(100,170))
                 .buildAndPlay();
         System.out.println(name + " terminó de preparar: " + order);
     }

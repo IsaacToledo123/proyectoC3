@@ -22,7 +22,7 @@ public class Cocinero extends Thread {
 
                 Thread.sleep((int) (Math.random() * 2000));
 
-                monitorMesero.addReadyOrder(order);
+                monitorMesero.agregarOrdenLista(order);
                 cocineroController.finishCooking(order);
             }
         } catch (InterruptedException e) {

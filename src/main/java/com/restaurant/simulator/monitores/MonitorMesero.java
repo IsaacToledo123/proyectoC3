@@ -22,7 +22,7 @@ public class MonitorMesero {
         notifyAll();
     }
 
-    public synchronized String takeOrder() throws InterruptedException {
+    public synchronized String tomarOrden() throws InterruptedException {
         while (orderBuffer.isEmpty()) {
             wait();
         }
@@ -31,7 +31,7 @@ public class MonitorMesero {
         return order;
     }
 
-    public synchronized void addOrderChef(String order){
+    public synchronized void agregarOrden(String order){
         if (order == null || order.isEmpty()) {
             throw new IllegalArgumentException("La orden no puede ser nula o vacía");
         }
@@ -49,7 +49,7 @@ public class MonitorMesero {
         return orderChef;
     }
 
-    public synchronized void addReadyOrder(String readyOrder) {
+    public synchronized void agregarOrdenLista(String readyOrder) {
         if (readyOrder == null || readyOrder.isEmpty()) {
             throw new IllegalArgumentException("La orden lista no puede ser nula o vacía");
         }
@@ -58,7 +58,7 @@ public class MonitorMesero {
         notifyAll();
     }
 
-    public synchronized String takeReadyOrder() throws InterruptedException {
+    public synchronized String tomarBuffer() throws InterruptedException {
         while (readyBuffer.isEmpty()) {
             wait();
         }
@@ -68,13 +68,13 @@ public class MonitorMesero {
         return readyOrder;
     }
 
-    public synchronized void deliverFood(String dinerName) {
+    public synchronized void entregarComida(String dinerName) {
         dinerFoodStatus.put(dinerName, true);
         System.out.println("Comida entregada a: " + dinerName + " (Estado: " + dinerFoodStatus.get(dinerName) + ")");
         notifyAll();
     }
 
-    public synchronized void waitFood(String dinerName) throws InterruptedException {
+    public synchronized void esperarComida(String dinerName) throws InterruptedException {
         while (!dinerFoodStatus.getOrDefault(dinerName, false)) {
             wait();
         }

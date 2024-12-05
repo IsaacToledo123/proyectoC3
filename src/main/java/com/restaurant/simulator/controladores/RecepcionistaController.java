@@ -10,9 +10,9 @@ public class RecepcionistaController {
     private Entity recepcionistEntity;
 
     public RecepcionistaController(){
-        Texture textura = SpriteLoader.getSprite("pajaro.png",1,1,32,32);
+        Texture textura = SpriteLoader.getSprite("character.png",6,6,16,16);
         recepcionistEntity = FXGL.entityBuilder()
-                .at(600, 260)
+                .at(350, 540)
                 .scale(2,2)
                 .view(textura)
                 .buildAndAttach();

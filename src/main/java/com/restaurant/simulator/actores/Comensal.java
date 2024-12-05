@@ -1,6 +1,6 @@
 package com.restaurant.simulator.actores;
 
-import com.restaurant.simulator.controladores.CustomerController;
+import com.restaurant.simulator.controladores.ComensalController;
 import com.restaurant.simulator.monitores.RecepcionistMonitor;
 import com.restaurant.simulator.monitores.MonitorMesero;
 import javafx.geometry.Point2D;
@@ -12,7 +12,7 @@ public class Comensal extends Thread {
     private static final  double LAMBDA = 0.1;
     private RecepcionistMonitor recepcionistMonitor;
     private MonitorMesero monitorMesero;
-    private CustomerController customerController;
+    private ComensalController comensalController;
     private boolean hasReceivedFood = false;
     private Point2D mesa;
 
@@ -20,11 +20,11 @@ public class Comensal extends Thread {
         super(name);
         this.recepcionistMonitor = recepcionistMonitor;
         this.monitorMesero = monitorMesero;
-        this.customerController = new CustomerController(name);
+        this.comensalController = new ComensalController(name);
     }
 
-    public CustomerController getCustomerController() {
-        return customerController;
+    public ComensalController getCustomerController() {
+        return comensalController;
     }
 
     public Point2D getMesa() {
@@ -36,23 +36,23 @@ public class Comensal extends Thread {
         try {
             System.out.println("Comensal " + this.getName() + " ha llegado al restaurante.");
             Thread.sleep(poisson(LAMBDA));
-            customerController.moveToLobby(700, 550);
+            comensalController.moveToLobby(380, 590);
             Thread.sleep(1000);
-            mesa = recepcionistMonitor.assignTable();
-            customerController.moveToTable(mesa.getX(), mesa.getY());
+            mesa = recepcionistMonitor.asignarMesa();
+            comensalController.moveToTable(mesa.getX(), mesa.getY());
 
             System.out.println("Comensal " + this.getName() + " está listo para ordenar.");
             monitorMesero.addOrder("Orden " + this.getName());
 
-            monitorMesero.waitFood(this.getName());
+            monitorMesero.esperarComida(this.getName());
 
             System.out.println("Comensal " + this.getName() + " está comiendo.");
             Thread.sleep((int) (Math.random() * 5000) + 5000);
             System.out.println("Comensal " + this.getName() + " ha terminado de comer y está saliendo.");
 
-            customerController.exitRestaurant();
+            comensalController.exitRestaurant();
 
-            recepcionistMonitor.releaseTable(mesa);
+            recepcionistMonitor.mesaLibre(mesa);
         } catch (InterruptedException e) {
             System.err.println("Comensal " + this.getName() + " fue interrumpido: " + e.getMessage());
         }
