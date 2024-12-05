@@ -14,6 +14,7 @@ public class Comensal extends Thread {
     private final Entity entidad;
     private String estadoActual;
 
+    // Constructor
     public Comensal(MonitorMesas monitorMesas, Buffer bufferOrdenes, BufferComida bufferComida, String nombre, Entity entidad) {
         this.monitorMesas = monitorMesas;
         this.bufferOrdenes = bufferOrdenes;
@@ -22,16 +23,16 @@ public class Comensal extends Thread {
         this.entidad = entidad; // Inicializar la entidad gráfica
     }
 
+    // Método principal que ejecuta el hilo
     @Override
     public void run() {
         try {
-            // Actualizar estado en la UI
+            // Actualiza el estado a "Buscando mesa"
             actualizarEstado("Buscando mesa");
 
             System.out.println(nombre + " llega al restaurante y busca una mesa.");
-            // Pasamos el objeto Comensal completo
-            String mesa = monitorMesas.asignarMesa(this); // Aquí pasamos 'this' (el objeto Comensal)
-
+            // Asigna una mesa y actualiza el estado a "Sentado"
+            String mesa = monitorMesas.asignarMesa(this);
             actualizarEstado("Sentado en " + mesa);
             System.out.println(nombre + " se sienta en " + mesa + " y espera al mesero para hacer su pedido.");
 
@@ -39,34 +40,34 @@ public class Comensal extends Thread {
             bufferOrdenes.agregarOrden(nombre);
             System.out.println(nombre + " hace su pedido.");
 
-            // Esperar a recibir la comida usando el código de tu compañero
+            // Esperar a recibir la comida
             String comida = null;
             while (comida == null) {
                 comida = bufferComida.tomarComida();
                 if (comida == null) {
-                    Thread.sleep(100); // Esperar un poco antes de verificar nuevamente
+                    Thread.sleep(100); // Espera antes de intentar nuevamente
                 }
             }
 
-            // Recibe la comida y comienza a comer
+            // Recibe la comida y actualiza el estado
             actualizarEstado("Comiendo");
             System.out.println(nombre + " recibe su comida y empieza a comer.");
 
-            // Simular tiempo de comida
+            // Simula tiempo de comida
             Thread.sleep(3000);
 
-            // Liberar mesa
+            // Termina y libera la mesa
             actualizarEstado("Terminando");
             monitorMesas.liberarMesa(mesa);
             System.out.println(nombre + " termina de comer y libera " + mesa);
 
-            // Salir del restaurante
+            // Sale del restaurante
             actualizarEstado("Saliendo");
 
         } catch (InterruptedException e) {
             Thread.currentThread().interrupt();
         } finally {
-            // Eliminar entidad de la UI
+            // Elimina la entidad gráfica de la UI cuando el hilo termina
             Platform.runLater(() -> {
                 if (entidad != null) {
                     entidad.removeFromWorld();
@@ -80,7 +81,7 @@ public class Comensal extends Thread {
         this.estadoActual = estado;
         Platform.runLater(() -> {
             if (entidad != null) {
-                entidad.setProperty("estado", estado);
+                entidad.setProperty("estado", estado);  // Actualiza el estado gráfico
             }
         });
     }
@@ -89,7 +90,7 @@ public class Comensal extends Thread {
     public void actualizarPosicion(double x, double y) {
         Platform.runLater(() -> {
             if (entidad != null) {
-                entidad.setPosition(x, y);
+                entidad.setPosition(x, y);  // Mueve la entidad gráficamente
             }
         });
     }

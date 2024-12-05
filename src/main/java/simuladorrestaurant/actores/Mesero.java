@@ -30,13 +30,16 @@ public class Mesero extends Thread {
                 String comida = bufferComida.tomarComida();
 
                 if (comida != null) {
-                    // Simular movimiento y entrega
-                    moverEntidad(200, 200); // Ejemplo de movimiento
+                    // Simular movimiento hacia la posición de la entrega
+                    moverEntidad(200, 200); // Ejemplo de movimiento a una posición fija
 
                     System.out.println("Mesero entrega la comida a " + comida);
 
-                    // Opcional: Añadir una pequeña pausa para simular entrega
+                    // Simular pausa para la entrega
                     Thread.sleep(500);
+
+                    // Retornar a la posición inicial (ejemplo)
+                    moverEntidad(0, 0);
                 }
 
                 Thread.sleep(1000); // Prevenir uso excesivo de CPU
@@ -45,11 +48,12 @@ public class Mesero extends Thread {
             Thread.currentThread().interrupt();
         }
     }
+
     // Método para mover la entidad en la UI
     private void moverEntidad(double x, double y) {
         Platform.runLater(() -> {
             if (entity != null) {
-                entity.setPosition(x, y);
+                entity.setPosition(x, y); // Actualiza posición gráfica
             }
         });
     }

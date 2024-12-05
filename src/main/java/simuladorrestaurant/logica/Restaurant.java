@@ -11,6 +11,7 @@ import com.almasb.fxgl.dsl.FXGL;
 import com.almasb.fxgl.entity.Entity;
 
 import javafx.application.Platform;
+import simuladorrestaurant.util.EntidadManager;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,24 +27,29 @@ public class Restaurant {
     private final List<Mesero> meseros;
     private final List<Cocinero> cocineros;
 
-    private RestaurantEntityFactory factory;
+    private final RestaurantEntityFactory factory;
+    private final EntidadManager entidadManager;
 
     private final Random random = new Random();
 
-    public Restaurant(int numMeseros, int numCocineros, MonitorMesas monitorMesas) {
-        this.factory = new RestaurantEntityFactory(monitorMesas);
-        this.monitorMesas = monitorMesas;  // Asignar el monitorMesas pasado
+    public Restaurant(int numMeseros, int numCocineros, MonitorMesas monitorMesas, EntidadManager entidadManager) {
+        this.entidadManager = entidadManager; // Inicializar EntidadManager
         MonitorCocina monitorCocina = new MonitorCocina();
-        this.bufferOrdenes = new Buffer(10);
-        this.bufferComida = new BufferComida(5);
+        Buffer bufferOrdenes = new Buffer(10);
+        BufferComida bufferComida = new BufferComida(5);
+        this.factory = new RestaurantEntityFactory(monitorMesas, monitorCocina, bufferOrdenes, bufferComida, entidadManager);
+        this.monitorMesas = monitorMesas; // Asignar el monitorMesas pasado
+        this.bufferOrdenes = bufferOrdenes;
+        this.bufferComida = bufferComida;
 
         this.comensales = new ArrayList<>();
         this.meseros = new ArrayList<>();
         this.cocineros = new ArrayList<>();
 
         for (int i = 0; i < numMeseros; i++) {
-            SpawnData spawnData = new SpawnData(100 + (i * 50), 100); // Usar SpawnData
-            Entity meseroEntity = new RestaurantEntityFactory(monitorMesas).createMesero(spawnData); // Pasar SpawnData
+            SpawnData spawnData = new SpawnData(100 + (i * 50), 100);
+            System.out.println("ver valores del spawn"+spawnData);
+            Entity meseroEntity = factory.createMesero(spawnData);
             Mesero mesero = new Mesero(
                     bufferOrdenes,
                     bufferComida,
@@ -52,12 +58,13 @@ public class Restaurant {
                     meseroEntity
             );
             this.meseros.add(mesero);
+            crearEntidadLogica("mesero", 1, 1);
             FXGL.getGameWorld().addEntity(meseroEntity);
         }
 
         for (int i = 0; i < numCocineros; i++) {
             SpawnData spawnData = new SpawnData(200 + (i * 50), 100);
-            Entity cocineroEntity = new RestaurantEntityFactory(monitorMesas).createCocinero(spawnData);
+            Entity cocineroEntity = factory.createCocinero(spawnData);
             Cocinero cocinero = new Cocinero(
                     bufferOrdenes,
                     bufferComida,
@@ -65,16 +72,31 @@ public class Restaurant {
                     cocineroEntity
             );
             this.cocineros.add(cocinero);
+            entidadManager.registrarEntidadLogica(id,  tipo, areaValida);
             FXGL.getGameWorld().addEntity(cocineroEntity);
         }
     }
 
     public void iniciarSimulacion() {
-        meseros.forEach(Thread::start);
-        cocineros.forEach(Thread::start);
+        for (Mesero mesero : meseros) {
+            try {
+                mesero.start();
+            } catch (Exception e) {
+                e.printStackTrace();
+                System.out.println("Error iniciando el mesero: " + e.getMessage());
+            }
+        }
+        for (Cocinero cocinero : cocineros) {
+            try {
+                cocinero.start();
+            } catch (Exception e) {
+                e.printStackTrace();
+                System.out.println("Error iniciando el cocinero: " + e.getMessage());
+            }
+        }
     }
 
-    public void llegarComensales() {
+    public void llegarComensales(MonitorCocina monitorCocina, EntidadManager entidadManager) {
         new Thread(() -> {
             while (true) {
                 try {
@@ -83,12 +105,13 @@ public class Restaurant {
                             300 + random.nextInt(200),
                             150 + (comensales.size() * 50)
                     );
-                    Entity comensalEntity = new RestaurantEntityFactory(monitorMesas).createComensal(spawnData);
+                    Entity comensalEntity = factory.createComensal(spawnData);
                     Platform.runLater(() -> FXGL.getGameWorld().addEntity(comensalEntity));
                     Comensal comensal = new Comensal(
                             monitorMesas, bufferOrdenes, bufferComida, nombreComensal, comensalEntity
                     );
                     comensales.add(comensal);
+                    crearEntidadLogica("comensal", 2, 2);
                     comensal.start();
                     monitorMesas.asignarMesa(comensal);
                     monitorMesas.notificar();
@@ -108,7 +131,7 @@ public class Restaurant {
     }
 
     public int getMesasDisponibles() {
-        return monitorMesas.getMesasDisponibles(); // Se asegura de que refleje correctamente las mesas disponibles
+        return monitorMesas.getMesasDisponibles();
     }
 
     public List<Comensal> getComensales() {

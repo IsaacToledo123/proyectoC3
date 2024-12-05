@@ -6,7 +6,6 @@ import simuladorrestaurant.concurrencia.Buffer;
 import simuladorrestaurant.concurrencia.BufferComida;
 import javafx.application.Platform;
 
-
 public class Cocinero extends Thread {
     private final MonitorCocina monitorCocina;
     private final Buffer bufferOrdenes;
@@ -45,11 +44,12 @@ public class Cocinero extends Thread {
             Thread.currentThread().interrupt();
         }
     }
+
     // Método para cambiar el estado de la entidad en la UI
     private void cambiarEstadoEntidad(String estado) {
-        javafx.application.Platform.runLater(() -> {
+        Platform.runLater(() -> {
             if (entity != null) {
-                entity.setProperty("estado", estado);
+                entity.setProperty("estado", estado); // Actualiza el estado gráfico
             }
         });
     }
