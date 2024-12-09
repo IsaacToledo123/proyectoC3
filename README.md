@@ -1,135 +1,87 @@
-# Título del Proyecto
 
-Nombre autoexplicativo del proyecto, con una breve descripción.
+
+# Simulador de Restaurante - Concurrencia en Java con FXGL
+
+Un simulador de restaurante interactivo que utiliza Java FXGL para gráficos y concurrencia, mostrando cómo administrar procesos complejos como asignación de mesas, atención a clientes y gestión de pedidos en tiempo real.
 
 ## Descripción
 
-Una descripción más detallada y técnica del proyecto, incluyendo sus principales características, su propósito y cómo funciona.
+Este proyecto simula un restaurante en el que varios procesos concurrentes son manejados mediante monitores y buffers, aprovechando las capacidades de Java FXGL para la creación de interfaces interactivas y eficientes.  
+
+- **Gestión de Procesos Concurrentes:** Uso de monitores y buffers para sincronizar operaciones como la llegada de clientes, preparación de pedidos y facturación.  
+- **Interfaz Gráfica Dinámica:** Java FXGL potencia la representación visual con animaciones y gráficos avanzados.  
+- **Optimización del Flujo de Trabajo:** Implementa lógica para evitar bloqueos y mejorar la experiencia del usuario simulando un entorno fluido.
 
 ## Insignias
 
-Insignias que muestran metadatos como el estado de la compilación, la cobertura de las pruebas, el estado de las dependencias, etc.
+[![Java](https://img.shields.io/badge/Java-21-brightgreen)](https://www.oracle.com/java/technologies/javase-jdk21-downloads.html)  
+[![FXGL](https://img.shields.io/badge/FXGL-17.3-orange)](https://github.com/AlmasB/FXGL)  
+[![Concurrencia](https://img.shields.io/badge/Concurrencia-Java-blue)](https://docs.oracle.com/javase/tutorial/essential/concurrency/)
 
 ## Visuales
 
-Capturas de pantalla, videos o GIFs que demuestran lo que hace el proyecto y cómo usarlo.
+Capturas de pantalla o GIFs mostrando:  
+- Clientes entrando al restaurante.  
+- Preparación y entrega de pedidos.  
+- Representación gráfica de la concurrencia en acción.  
 
 ## Empezando 🚀
 
-Estas instrucciones te guiarán para obtener una copia de este proyecto en funcionamiento en tu máquina local para propósitos de desarrollo y pruebas.
+Sigue estas instrucciones para configurar y ejecutar el proyecto en tu entorno local.
 
 ### Prerrequisitos 📋
 
-Lista de software y herramientas, incluyendo versiones, que necesitas para instalar y ejecutar este proyecto:
-
-- Sistema Operativo (por ejemplo, Ubuntu 20.04, Windows 10)
-- Lenguaje de programación (por ejemplo, Python 3.8)
-- Framework (por ejemplo, Django 3.1)
-- Base de datos (por ejemplo, PostgreSQL 12)
-- Otros...
+- **Java 21**  
+- **Apache Maven 3.8+**  
+- **FXGL 17.3**  
+- **Sistema Operativo:** Windows 10/11 o Ubuntu 20.04+  
 
 ### Instalación 🔧
 
-Una guía paso a paso sobre cómo configurar el entorno de desarrollo e instalar todas las dependencias.
+Clona el repositorio e instala las dependencias:  
 
 ```bash
-# paso 1
-```
-
-Y así sucesivamente...
-
-```bash
-# paso 2
+git clone https://github.com/tuusuario/proyectoC3.git
+cd simulador-restaurante
+mvn install
 ```
 
 ## Ejecutando las Pruebas ⚙️
 
-Instrucciones y ejemplos para ejecutar el conjunto de pruebas.
+Ejecuta las pruebas unitarias y de integración:  
 
 ```bash
-# proporciona un ejemplo
+mvn test
 ```
 
-### Pruebas de Principio a Fin 🔩
+### Pruebas de Concurrencia 🔩
 
-Explica qué cubren estas pruebas, por qué son importantes y cómo interpretar sus resultados.
-
-### Pruebas de Estilo de Código ⌨️
-
-Descripción y ejemplos de las pruebas de estilo que estás utilizando.
+Estas pruebas verifican la correcta sincronización de procesos:  
+- Llegada de clientes sin bloqueo.  
+- Liberación adecuada de mesas y recursos.  
 
 ```bash
-# proporciona un ejemplo
+# Ejemplo de comando
+java -jar target/demo-1.0-SNAPSHOT.jar
 ```
-
-## Despliegue 📦
-
-Instrucciones sobre cómo desplegar esto en un sistema en vivo o ambiente de producción.
 
 ## Construido Con 🛠️
 
-Explica qué tecnologías usaste para construir este proyecto. Aquí algunos ejemplos:
-
-- [Ruby](https://www.ruby-lang.org/es/) - El lenguaje utilizado
-- [Ruby on Rails](https://rubyonrails.org) - El framework web utilizado
-- [Ruby gems](https://rubygems.org) - Gestión de dependencias
-- [Postgresql](https://www.postgresql.org) - Sistema de base de datos
-- [Bulma IO](https://bulma.io) - Framework de CSS
-
-## Contribuyendo 🖇️
-
-Las contribuciones son lo que hacen a la comunidad de código abierto un lugar increíble para aprender, inspirar y crear. Cualquier contribución que hagas es muy apreciada. Por favor, lee el [CONTRIBUTING.md](https://gist.github.com/brayandiazc/xxxxxx) para detalles sobre nuestro código de conducta, y el proceso para enviarnos pull requests.
-
-## Wiki 📖
-
-Puedes encontrar mucho más sobre cómo usar este proyecto en nuestra [Wiki](https://github.com/your/project/wiki)
-
-## Soporte
-
-Si tienes algún problema o sugerencia, por favor abre un problema [aquí](https://github.com/your/project/issues).
-
-## Roadmap
-
-Ideas, mejoras planificadas y actualizaciones futuras
-
-para el proyecto actual.
-
-## Versionado 📌
-
-Usamos [Git](https://git-scm.com) para el versionado. Para las versiones disponibles, ve las [etiquetas en este repositorio](https://github.com/your/project/tags).
+- **[Java FXGL](https://github.com/AlmasB/FXGL):** Framework para crear aplicaciones gráficas dinámicas.  
+- **Monitores:** Gestión de concurrencia con exclusión mutua y sincronización.  
+- **Buffers:** Almacenamiento temporal para la interacción de procesos.
 
 ## Autores ✒️
 
-- **Brayan Diaz C** - _Trabajo inicial_ - [Brayan Diaz C](https://github.com/brayandiazc)
-
-Mira también la lista de [contribuidores](https://github.com/your/project/contributors) que han participado en este proyecto.
+- **Isaac Toledo Castillo** - _Creador del Proyecto_ - [Isaac Toledo](https://github.com/tuusuario)  
 
 ## Licencia 📄
 
-Este proyecto está bajo la Licencia XYZ - ve el archivo [LICENSE.md](LICENSE.md) para detalles
+Este proyecto está bajo la Licencia MIT - consulta el archivo [LICENSE.md](LICENSE.md) para más detalles.
 
 ## Expresiones de Gratitud 🎁
 
-Estamos agradecidos por las contribuciones de la comunidad a este proyecto. Si encontraste cualquier valor en este proyecto o quieres contribuir, aquí está lo que puedes hacer:
+- A la comunidad de FXGL por su framework poderoso.  
+- A los entusiastas de la programación concurrente.  
 
-- Comparte este proyecto con otros
-- Invítanos un café ☕
-- Inicia un nuevo problema o contribuye con un PR
-- Muestra tu agradecimiento diciendo gracias en un nuevo problema.
-
----
-
-## Consejos Adicionales 📝
-
-Aquí hay algunos consejos extra para aprovechar al máximo tu README:
-
-- Mantén cada sección lo más concisa posible. Evita la pelusa innecesaria, ya que puede ser abrumadora para el lector.
-- Asegúrate de que tus instrucciones de instalación, pruebas y despliegue sean detalladas y precisas. Si hay pasos adicionales que el lector necesita tomar (como instalar dependencias extra), asegúrate de incluirlos.
-- Los visuales (imágenes, GIFs) son muy útiles para transmitir rápidamente lo que hace tu proyecto y cómo usarlo. Si puedes, incluye capturas de pantalla de tu aplicación en acción o GIFs que demuestren su uso.
-- El tono amigable y acogedor que usas en tu README es excelente. Ayuda a hacer tu proyecto más acogedor para los colaboradores.
-
-Recuerda, un buen README es crucial para hacer que tu proyecto sea atractivo y accesible para otros desarrolladores. ¡Buena suerte con tu proyecto!
-
----
-
-⌨️ con ❤️ por [Brayan Diaz C](https://github.com/brayandiazc) 😊
+--- 
