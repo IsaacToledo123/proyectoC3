@@ -60,7 +60,7 @@ java -jar target/demo-1.0-SNAPSHOT.jar
 ```
 
 
-### **Implementación de Monitores y Buffers **  
+### **Implementación de Monitores y Buffers**  
 
 En este proyecto, los **monitores** y **buffers** se implementaron para gestionar la concurrencia, asegurando que los recursos compartidos, como las mesas del restaurante y los pedidos, se manejen de manera eficiente y sin conflictos. A continuación, explicamos cómo funcionan y cómo se implementaron, acompañados de fragmentos de código relevantes.  
 
@@ -229,7 +229,7 @@ public class RestauranteSimulador {
 
 ---
 
-### **Funciones Clave de Java FXGL **
+### **Funciones Clave de JavaFXGL**  
 
 #### **1. Inicialización de la Aplicación con `GameApplication`**
 La clase `GameApplication` es el punto de partida para cualquier proyecto basado en FXGL. Permite configurar la lógica central del juego y personalizar elementos esenciales como el tamaño de la ventana, el título y los ajustes iniciales.
@@ -316,12 +316,7 @@ FXGL incluye soporte para crear animaciones fluidas y visualmente atractivas, lo
 ## Autores ✒️
 
 - **Isaac Toledo Castillo** - _Creador del Proyecto_ - [Isaac Toledo](https://github.com/IsaacToledo123)
-- **Jesus Hernandez Villatoro** - _Creador del Proyecto_ - [Jesus Hernandez](https://github.com/tuusuario)  
-- 
-
-## Licencia 📄
-
-Este proyecto está bajo la Licencia MIT - consulta el archivo [LICENSE.md](LICENSE.md) para más detalles.
+- **Jesus Hernandez Villatoro** - _Creador del Proyecto_ - [Jesus Hernandez](https://github.com/JesusHernandez223258)  
 
 ## Expresiones de Gratitud 🎁
 
